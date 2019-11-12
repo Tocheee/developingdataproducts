@@ -1,7 +1,7 @@
 ---
-title: "Canadian Permanent Residence Admissions by Country of Origin (2019 Total) "
+title: <font size="5"> Canadian Permanent Residence Admissions by Country of Origin (2019 Total) </font>
 author: ""
-date: "November 11, 2019,                                 Contains information licensed under the Open Government Licence – Canada.                                                  License: https://open.canada.ca/en/open-government-licence-canada"
+date: "November 11, 2019"
 output: html_document
 ---
 
@@ -75,7 +75,9 @@ pr_data <- merge(df,pr_data,by.x="Country",by.y="Country of Origin") %>%
 pr_data$`Country and Total` <- paste(pr_data$Country,pr_data$Total,sep=", ")
 
 ```
-
+**Contains information licensed under the Open Government Licence – Canada.**                     
+**PUBLISHER - Current Organization Name: Immigration, Refugees and Citizenship Canada                                         **                                                               
+**LICENSE:** https://open.canada.ca/en/open-government-licence-canada
 ```{r}
 pr_map <- pr_data %>% leaflet() %>% addTiles() %>% addCircleMarkers(radius = as.numeric(pr_data$Total)/1000,label = pr_data$`Country and Total`, fill= pr_data$Total, lng = pr_data$Longtitude, lat=pr_data$Latitude)
 
