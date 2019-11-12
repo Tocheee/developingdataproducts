@@ -1,7 +1,7 @@
 ---
-title: "Canadian Permanent Residence Admissions by Country of Origin (2019 Total)"
+title: "Canadian Permanent Residence Admissions by Country of Origin (2019 Total) "
 author: ""
-date: "November 11, 2019"
+date: "November 11, 2019,                                 Contains information licensed under the Open Government Licence – Canada.                                                  License: https://open.canada.ca/en/open-government-licence-canada"
 output: html_document
 ---
 
