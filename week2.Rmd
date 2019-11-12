@@ -1,0 +1,85 @@
+---
+title: "Canadian Permanent Residence Admissions by Country of Origin (2019 Total)"
+author: ""
+date: "November 11, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+```{r cars,message=FALSE}
+#Read in libraries
+#For data manipulation and cleaning
+library(tidyverse)
+#For map creation
+library(leaflet)
+# For longitude and latitude information
+# install.packages("rgeos")
+library(rgeos)
+# install.packages("rworldmap")
+library(rworldmap)
+```
+
+```{r,message=FALSE, warning=FALSE}
+#Read in prdata
+#Geospatial data on the country of origin of Canadian Permanent Residents
+
+pr_data <- read_csv("pr_admissions.csv", 
+                    col_types =  c(.default = "?",
+                                   X81 = "n"))
+```
+
+
+```{r, message=FALSE,warning=FALSE}
+#Data cleaning
+#Select the first and last columns only as this is the dataset we are interested in
+pr_data <- pr_data[,c(1,ncol(pr_data))]
+
+#Rename the columns and remove na rows
+
+pr_data <- pr_data %>% 
+  rename(`Country of Origin` = `Canada - Admissions of Permanent Residents by Country of Citizenship, January 2015 - August 2019`,
+         Total = X81) %>% 
+  na.omit()
+
+#Filter out the row with the column total
+
+pr_data <- filter(pr_data,!str_detect(`Country of Origin`,"Total"))
+
+#This section of the script uses the code from this stack overflow question - https://gis.stackexchange.com/questions/71921/list-of-central-coordinates-centroid-for-all-countries
+#########
+#Get centroids for the countries
+# get world map
+wmap <- getMap(resolution="high")
+
+# get centroids
+centroids <- gCentroid(wmap, byid=TRUE)
+
+# get a data.frame with centroids
+df <- as.data.frame(centroids)
+#########
+
+#Merge the longitude and latitude data with the pr information
+
+#Convert the df rownames to columns
+df <- rownames_to_column(df,"Country")
+
+pr_data <- merge(df,pr_data,by.x="Country",by.y="Country of Origin") %>% 
+  rename(Longtitude = x,
+         Latitude = y)
+
+#Create a new column that is a concatenation between the country name and the total
+pr_data$`Country and Total` <- paste(pr_data$Country,pr_data$Total,sep=", ")
+
+```
+
+```{r}
+pr_map <- pr_data %>% leaflet() %>% addTiles() %>% addCircleMarkers(radius = as.numeric(pr_data$Total)/1000,label = pr_data$`Country and Total`, fill= pr_data$Total, lng = pr_data$Longtitude, lat=pr_data$Latitude)
+
+pr_map
+
+
+```
