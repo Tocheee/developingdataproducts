@@ -47,7 +47,9 @@ pr_data <- pr_data %>%
 
 #Filter out the row with the column total
 
-pr_data <- filter(pr_data,!str_detect(`Country of Origin`,"Total"))
+pr_data <- filter(pr_data,!str_detect(`Country of Origin`,"Total")) 
+
+pr_data$`Country of Origin` <- str_replace(pr_data$`Country of Origin`,"^China.*","China")
 
 #This section of the script uses the code from this stack overflow question - https://gis.stackexchange.com/questions/71921/list-of-central-coordinates-centroid-for-all-countries
 #########
