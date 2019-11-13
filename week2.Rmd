@@ -1,6 +1,6 @@
 ---
 title: <font size="5"> Canadian Permanent Residence Admissions by Country of Origin (2019 Total) </font>
-author: ""
+author: "Tochi Okeke"
 date: "November 11, 2019"
 output: html_document
 ---
@@ -49,7 +49,15 @@ pr_data <- pr_data %>%
 
 pr_data <- filter(pr_data,!str_detect(`Country of Origin`,"Total")) 
 
-pr_data$`Country of Origin` <- str_replace(pr_data$`Country of Origin`,"^China.*","China")
+pr_data$`Country of Origin` <- str_replace(pr_data$`Country of Origin`,",.*","")
+
+#Rename a few specific rows
+pr_data$`Country of Origin`[35] = "Democratic Republic of the Congo"
+pr_data$`Country of Origin`[36] = "Republic of the Congo"
+
+pr_data$`Country of Origin`[86] = "North Korea"
+pr_data$`Country of Origin`[87] = "South Korea"
+
 
 #This section of the script uses the code from this stack overflow question - https://gis.stackexchange.com/questions/71921/list-of-central-coordinates-centroid-for-all-countries
 #########

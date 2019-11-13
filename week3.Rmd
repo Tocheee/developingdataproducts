@@ -59,7 +59,9 @@ pr_data <- pr_data %>%
 head(10)
 
 plot_object <- pr_data %>% 
-  ggplot(aes(`Country of Origin`,Total) + geom_bar(stat="identity")
+  ggplot(aes(`Country of Origin`,Total) 
+         
+plot_object <- plot_object + geom_bar(stat="identity")
 
 ggplotly(plot_object)
 
