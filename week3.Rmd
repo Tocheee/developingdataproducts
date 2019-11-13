@@ -1,5 +1,5 @@
 ---
-title: <font size="5"> Canadian Permanent Residence Admissions by Country of Origin (Top 10) </font>
+title: <font size="5"> Canadian Permanent Residence Admissions by Country of Origin </font>
 author: ""
 date: "November 11, 2019"
 output: html_document
@@ -49,7 +49,6 @@ pr_data <- pr_data %>%
 pr_data <- filter(pr_data,!str_detect(`Country of Origin`,"Total"))
 ```
 **Contains information licensed under the Open Government Licence – Canada.**                     
-**PUBLISHER - Current Organization Name: Immigration, Refugees and Citizenship Canada                                         **                                                               
 **LICENSE:** https://open.canada.ca/en/open-government-licence-canada
 ```{r}
 
@@ -59,9 +58,14 @@ pr_data <- pr_data %>%
 head(10)
 
 plot_object <- pr_data %>% 
-  ggplot(aes(`Country of Origin`,Total) 
+  ggplot(aes(`Country of Origin`,Total))
          
-plot_object <- plot_object + geom_bar(stat="identity")
+plot_object <- plot_object +
+  geom_bar(stat="identity") +
+  labs(y="Admissions",x="Country",title="Top 10 Countries of Origin") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle=45)) 
+  
 
 ggplotly(plot_object)
 
