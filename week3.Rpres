@@ -1,0 +1,67 @@
+week3
+========================================================
+author: Tochi Okeke
+date: 2019-11-12
+autosize: true
+
+Data Source and Licence
+========================================================
+
+**Contains information licensed under the Open Government Licence – Canada.**                     
+**LICENSE:** https://open.canada.ca/en/open-government-licence-canada
+**Source** https://open.canada.ca/data/en/dataset/f7e5498e-0ad8-4417-85c9-9b8aff9b9eda
+
+========================================================
+
+GGplotly Graph
+========================================================
+
+```{r, echo=FALSE}
+#Read in libraries
+#For data manipulation and cleaning
+library(tidyverse)
+#For creating plots
+library(ggplot2)
+#For interactive plots
+library(plotly)
+install.packages("webshot")
+
+
+#Read in prdata
+#Geospatial data on the country of origin of Canadian Permanent Residents
+
+pr_data <- read_csv("pr_admissions.csv", 
+                    col_types =  c(.default = "?",
+                                   X81 = "n"))
+
+#Data cleaning
+#Select the first and last columns only as this is the dataset we are interested in
+pr_data <- pr_data[,c(1,ncol(pr_data))]
+
+#Rename the columns and remove na rows
+
+pr_data <- pr_data %>% 
+  rename(`Country of Origin` = `Canada - Admissions of Permanent Residents by Country of Citizenship, January 2015 - August 2019`,
+         Total = X81) %>% 
+  na.omit()
+#Filter out the row with the column total
+
+pr_data <- filter(pr_data,!str_detect(`Country of Origin`,"Total"))
+
+# Create the plot
+pr_data <- pr_data %>% 
+ arrange(desc(Total)) %>% 
+head(10)
+
+plot_object <- pr_data %>% 
+  ggplot(aes(`Country of Origin`,Total))
+         
+plot_object <- plot_object +
+  geom_bar(stat="identity") +
+  labs(y="Admissions",x="Country",title="Top 10 Countries of Origin") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle=45)) 
+  
+
+ggplotly(plot_object)
+```
