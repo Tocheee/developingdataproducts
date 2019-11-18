@@ -1,0 +1,12 @@
+name: week4app
+title:
+username:
+account: tocheee
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 1485357
+bundleId: 2596695
+url: https://tocheee.shinyapps.io/week4app/
+when: 1574049897.91952
+asMultiple: FALSE
+asStatic: FALSE

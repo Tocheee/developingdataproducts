@@ -15,20 +15,25 @@ shinyUI(fluidPage(
   
   # Application title
   titlePanel("Permanent Residency Admissions 2015 - 2019"),
+
+  h3(strong("Instructions: Select a year from the drop-down below to see the change in distribution of countries of origin.")),
+  
+  
+  h4(("Contains information licensed under the Open Government Licence – Canada.")),
+  h4(("LICENSE: https://open.canada.ca/en/open-government-licence-canada")),
   
   # Sidebar with a slider input for number of bins 
   sidebarLayout(
     sidebarPanel(
-       radioButtons("year",
+      selectInput("year",
                    "Year",
                    choices = c("2015","2016","2017","2018","2019")
-       )),
-                   
+      )),
+    
     # Show a plot of the generated distribution
     mainPanel(
-       leafletOutput("pr_map"),
-       p(),
-       actionButton("recalc", "See new data")
+      leafletOutput("pr_map"),
+      p()
     )
   )
 ))

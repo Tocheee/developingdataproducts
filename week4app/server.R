@@ -52,10 +52,10 @@ pr_data <- pr_data %>%
          `2019` = as.numeric(str_replace(pr_data$`2019`,",","")))
 
 #Rename a few specific rows
-pr_data$`Country of Origin`[35] = "Democratic Republic of the Congo"
-pr_data$`Country of Origin`[36] = "Republic of the Congo"
-pr_data$`Country of Origin`[86] = "North Korea"
-pr_data$`Country of Origin`[87] = "South Korea"
+pr_data$`Country of Origin`[38] = "Democratic Republic of the Congo"
+pr_data$`Country of Origin`[39] = "Republic of the Congo"
+pr_data$`Country of Origin`[90] = "North Korea"
+pr_data$`Country of Origin`[91] = "South Korea"
 
 #This section of the script uses the code from this stack overflow question - https://gis.stackexchange.com/questions/71921/list-of-central-coordinates-centroid-for-all-countries
 #########
