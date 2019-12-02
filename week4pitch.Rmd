@@ -1,0 +1,106 @@
+---
+title: "week4pitch"
+author: "Tochi Okeke"
+date: "November 18, 2019"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+
+##  Canada has become a popular home for new immigrants... but
+
+## Where in the world are new immigrants coming from?
+
+## How have the demographics of new immigrants changed in the last few years?
+
+## This app will answer these questions!
+
+## The App
+
+- You can select a year between 2015 to 2019 to see where new permanent residents originated from.
+- Here is an example showing 2019 (Q1 to Q3)
+- Contains information licensed under the Open Government Licence – Canada.
+- LICENSE: https://open.canada.ca/en/open-government-licence-canada
+```{r, echo = FALSE, warning=FALSE, message=FALSE}
+#Read in libraries
+#For data manipulation and cleaning
+library(tidyverse)
+#For map creation
+library(leaflet)
+# For longitude and latitude information
+# install.packages("rgeos")
+library(rgeos)
+# install.packages("rworldmap")
+library(rworldmap)
+
+
+#Read in prdata
+#Geospatial data on the country of origin of Canadian Permanent Residents
+
+pr_data <- read_csv("pr_admissions.csv", 
+                    col_types =  c(.default = "?",
+                                   X81 = "n"))
+
+#Data cleaning
+#Select the first and last columns only as this is the dataset we are interested in
+pr_data <- pr_data[,c(1,ncol(pr_data))]
+
+#Rename the columns and remove na rows
+
+pr_data <- pr_data %>% 
+  rename(`Country of Origin` = `Canada - Admissions of Permanent Residents by Country of Citizenship, January 2015 - August 2019`,
+         Total = X81) %>% 
+  na.omit()
+
+#Filter out the row with the column total
+
+pr_data <- filter(pr_data,!str_detect(`Country of Origin`,"Total")) 
+
+pr_data$`Country of Origin` <- str_replace(pr_data$`Country of Origin`,",.*","")
+
+#Rename a few specific rows
+pr_data$`Country of Origin`[35] = "Democratic Republic of the Congo"
+pr_data$`Country of Origin`[36] = "Republic of the Congo"
+
+pr_data$`Country of Origin`[86] = "North Korea"
+pr_data$`Country of Origin`[87] = "South Korea"
+
+
+#This section of the script uses the code from this stack overflow question - https://gis.stackexchange.com/questions/71921/list-of-central-coordinates-centroid-for-all-countries
+#########
+#Get centroids for the countries
+# get world map
+wmap <- getMap(resolution="high")
+
+# get centroids
+centroids <- gCentroid(wmap, byid=TRUE)
+
+# get a data.frame with centroids
+df <- as.data.frame(centroids)
+#########
+
+#Merge the longitude and latitude data with the pr information
+
+#Convert the df rownames to columns
+df <- rownames_to_column(df,"Country")
+
+pr_data <- merge(df,pr_data,by.x="Country",by.y="Country of Origin") %>% 
+  rename(Longtitude = x,
+         Latitude = y)
+
+#Create a new column that is a concatenation between the country name and the total
+pr_data$`Country and Total` <- paste(pr_data$Country,pr_data$Total,sep=", ")
+
+pr_map <- pr_data %>% leaflet() %>% addTiles() %>% addCircleMarkers(radius = as.numeric(pr_data$Total)/1000,label = pr_data$`Country and Total`, fill= pr_data$Total, lng = pr_data$Longtitude, lat=pr_data$Latitude)
+
+pr_map
+```
+
+## Click the link below to use the app
+
+[link](https://tocheee.shinyapps.io/week4app/)
+
